@@ -6,35 +6,16 @@ import ServicesCard from "./ServicesCard";
 import AppointmentsCard from "./AppointmentsCard";
 import ClientsCard from "./ClientsCard";
 import ReportsCard from "./ReportsCard";
+import { ObtenerServicios } from "../actions";
+import { ServiceType } from "@/types";
 
-export default function Page() {
-  const [services, setServices] = useState([
-    {
-      id: 1,
-      name: "Corte de pelo",
-      icon: "Scissors",
-      description: "Corte y estilo",
-      cost: 150
-    },
-    {
-      id: 2,
-      name: "Manicura",
-      icon: "Sparkles",
-      description: "Cuidado de uñas",
-      cost: 100
-    },
-    {
-      id: 3,
-      name: "Facial",
-      icon: "Sparkles",
-      description: "Tratamiento facial",
-      cost: 200
-    },
-  ]);
+export default async function Page() {
+  const [services, setServices] = useState<ServiceType[]>([]);
+  setServices(await ObtenerServicios());
 
   const [appointments, setAppointments] = useState([
     {
-      id: 1,
+      id: "1",
       clientName: "María García",
       service: "Corte de pelo",
       day: "2023-06-15",
@@ -42,7 +23,7 @@ export default function Page() {
       status: "Confirmado",
     },
     {
-      id: 2,
+      id: "2",
       clientName: "Juan Pérez",
       service: "Manicura",
       day: "2023-06-16",
@@ -50,7 +31,7 @@ export default function Page() {
       status: "Pendiente",
     },
     {
-      id: 3,
+      id: "3",
       clientName: "Ana Rodríguez",
       service: "Facial",
       day: "2023-06-17",
@@ -61,7 +42,7 @@ export default function Page() {
 
   const [clients, setClients] = useState([
     {
-      id: 1,
+      id: "1",
       name: "María García",
       email: "maria@example.com",
       phone: "123-456-7890",
@@ -69,7 +50,7 @@ export default function Page() {
       preferences: "Corte de pelo",
     },
     {
-      id: 2,
+      id: "2",
       name: "Juan Pérez",
       email: "juan@example.com",
       phone: "098-765-4321",
@@ -77,7 +58,7 @@ export default function Page() {
       preferences: "Manicura",
     },
     {
-      id: 3,
+      id: "3",
       name: "Ana Rodríguez",
       email: "ana@example.com",
       phone: "555-555-5555",
@@ -87,9 +68,9 @@ export default function Page() {
   ]);
 
   const statsData = [
-    { service: "Corte de pelo", appointments: 45 },
-    { service: "Manicura", appointments: 30 },
-    { service: "Facial", appointments: 25 },
+    { id: "s1", service: "Corte de pelo", appointments: 45 },
+    { id: "s2", service: "Manicura", appointments: 30 },
+    { id: "s3", service: "Facial", appointments: 25 },
   ];
 
  

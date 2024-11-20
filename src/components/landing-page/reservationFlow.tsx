@@ -4,11 +4,12 @@ import { Calendar } from "../ui/calendar";
 import { Label } from "../ui/label";
 import { Input } from "../ui/input";
 import { Textarea } from "../ui/textarea";
+import { ServiceType } from "@/types";
 
 type ReservationFlowProps = {
     step: number;
     setStep: (step: number) => void;
-    services: { name: string; icon: JSX.Element }[];
+    services: ServiceType[];
 }
 
 export default function ReservationFlow({ step, setStep, services }: ReservationFlowProps) {
