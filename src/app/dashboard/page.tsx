@@ -14,18 +14,21 @@ export default function Page() {
       name: "Corte de pelo",
       icon: "Scissors",
       description: "Corte y estilo",
+      cost: 150
     },
     {
       id: 2,
       name: "Manicura",
       icon: "Sparkles",
       description: "Cuidado de uñas",
+      cost: 100
     },
     {
       id: 3,
       name: "Facial",
       icon: "Sparkles",
       description: "Tratamiento facial",
+      cost: 200
     },
   ]);
 
@@ -34,24 +37,24 @@ export default function Page() {
       id: 1,
       clientName: "María García",
       service: "Corte de pelo",
-      date: "2023-06-15",
-      time: "10:00",
+      day: "2023-06-15",
+      hour: "10:00",
       status: "Confirmado",
     },
     {
       id: 2,
       clientName: "Juan Pérez",
       service: "Manicura",
-      date: "2023-06-16",
-      time: "11:00",
+      day: "2023-06-16",
+      hour: "11:00",
       status: "Pendiente",
     },
     {
       id: 3,
       clientName: "Ana Rodríguez",
       service: "Facial",
-      date: "2023-06-17",
-      time: "14:00",
+      day: "2023-06-17",
+      hour: "14:00",
       status: "Completado",
     },
   ]);

@@ -3,14 +3,15 @@ export type ServiceType = {
     name: string;
     icon: string;
     description: string;
+    cost: number;
 }
 
 export type AppointmentType = {
     id: number;
     clientName: string;
     service: string;
-    date: string;
-    time: string;
+    day: string;
+    hour: string;
     status: string;
 }
 
