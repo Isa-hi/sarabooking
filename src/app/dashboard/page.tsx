@@ -3,37 +3,12 @@ import ServicesCard from "./ServicesCard";
 import AppointmentsCard from "./AppointmentsCard";
 import ClientsCard from "./ClientsCard";
 import ReportsCard from "./ReportsCard";
-import { ObtenerServicios } from "../actions";
+import { ObtenerCitasExtendido, ObtenerServicios } from "../actions";
 
 export default async function Page() {
   const services = await ObtenerServicios();
 
-  const appointments = [
-    {
-      id: "1",
-      clientName: "María García",
-      service: "Corte de pelo",
-      day: "2023-06-15",
-      hour: "10:00",
-      status: "Confirmado",
-    },
-    {
-      id: "2",
-      clientName: "Juan Pérez",
-      service: "Manicura",
-      day: "2023-06-16",
-      hour: "11:00",
-      status: "Pendiente",
-    },
-    {
-      id: "3",
-      clientName: "Ana Rodríguez",
-      service: "Facial",
-      day: "2023-06-17",
-      hour: "14:00",
-      status: "Completado",
-    },
-  ];
+  const appointments = await ObtenerCitasExtendido();
 
   const clients = [
     {

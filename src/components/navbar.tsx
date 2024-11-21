@@ -1,21 +1,22 @@
 "use client";
 import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
 import { Button } from "./ui/button";
 
 export default function Navbar() {
   const router = useRouter();
-  let user = null;
-  let isUserAdmin = false;
-  if (typeof window !== "undefined") {
-    user = localStorage.getItem("user");
-  }
-  if (user) {
-    const userObject = JSON.parse(user);
-    const adminEmail = "ejemplo@ejemplo.mx";
-    userObject.email === adminEmail
-      ? (isUserAdmin = true)
-      : (isUserAdmin = false);
-  }
+  const [user, setUser] = useState(null);
+  const [isUserAdmin, setIsUserAdmin] = useState(false);
+
+  useEffect(() => {
+    const storedUser = localStorage.getItem("user");
+    if (storedUser) {
+      const userObject = JSON.parse(storedUser);
+      setUser(userObject);
+      const adminEmail = "ejemplo@ejemplo.mx";
+      setIsUserAdmin(userObject.email === adminEmail);
+    }
+  }, []);
 
   return (
     <>
@@ -24,7 +25,7 @@ export default function Navbar() {
           <a href="/">✨ SaraBooking </a>{" "}
         </h1>
         <div className="gap-4 flex">
-          {user?.length ? (
+          {user ? (
             <>
               <Button
                 variant="secondary"

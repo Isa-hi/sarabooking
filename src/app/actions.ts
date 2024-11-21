@@ -39,6 +39,10 @@ export async function ObtenerCitas() {
   return await prisma.appointment.findMany();
 }
 
+export async function ObtenerCitasExtendido() {
+  return await prisma.appointment.findMany({ include: { user: true, service: true } });
+}
+
 export async function CrearCita(data: Omit<Appointment, "id" | "createdAt" | "updatedAt">) {
   return await prisma.appointment.create({ data });
 }
