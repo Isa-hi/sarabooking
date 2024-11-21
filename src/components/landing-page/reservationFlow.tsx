@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Button } from "../ui/button";
 import { Calendar } from "../ui/calendar";
 import { Label } from "../ui/label";
@@ -6,19 +6,45 @@ import { Input } from "../ui/input";
 import { Textarea } from "../ui/textarea";
 import { ServiceType } from "@/types";
 import { Scissors, Sparkles, Droplet, Sun } from "lucide-react";
+import { CrearCita, ObtenerHorariosDisponibles, ObtenerServicioPorNombre } from "@/app/actions";
+import { useToast } from "@/hooks/use-toast";
+import { cn } from "@/lib/utils";
 
 type ReservationFlowProps = {
-    step: number;
-    setStep: (step: number) => void;
-    services: ServiceType[];
-}
+  step: number;
+  setStep: (step: number) => void;
+  services: ServiceType[];
+};
 
-export default function ReservationFlow({ step, setStep, services }: ReservationFlowProps) {
+export default function ReservationFlow({
+  step,
+  setStep,
+  services,
+}: ReservationFlowProps) {
+  const { toast } = useToast();
   const [selectedService, setSelectedService] = useState("");
   const [selectedDate, setSelectedDate] = useState<Date | undefined>(undefined);
   const [selectedTime, setSelectedTime] = useState("");
+  const [serviceFromDB, setServiceFromDB] = useState<ServiceType | null>(null);
+  const [times, setTimes] = useState<string[]>([]);
+  const [availableTimes, setAvailableTimes] = useState<string[]>([]);
 
-  const times = ['10:00', '11:00', '12:00', '14:00', '15:00', '16:00']
+  useEffect(() => {
+    const fetchService = async () => {
+      try {
+        const serviceFromDB = await ObtenerServicioPorNombre(selectedService);
+        if (!serviceFromDB) return;
+        setServiceFromDB(serviceFromDB);
+        setTimes(serviceFromDB.schedules);
+        const availableTimes = await ObtenerHorariosDisponibles({ serviceId: serviceFromDB.id, date: selectedDate! });
+        setAvailableTimes(availableTimes);
+      } catch (error) {
+        console.error("Error fetching service:", error);
+      }
+    };
+
+    fetchService();
+  }, [selectedService]);
 
   const renderIcon = (iconName: string) => {
     switch (iconName) {
@@ -33,6 +59,25 @@ export default function ReservationFlow({ step, setStep, services }: Reservation
       default:
         return null;
     }
+  };
+
+  const handleSubmit = () => {
+    if (!selectedDate || !selectedTime || !serviceFromDB) return;
+    CrearCita({
+      day: selectedDate,
+      hour: selectedTime,
+      serviceId: serviceFromDB.id,
+      userId: "anonymous",
+    });
+    toast({
+      title: "Reserva Exitosa",
+      description: `Tu cita para ${selectedService} ha sido reservada para el ${selectedDate?.toLocaleDateString()} a las ${selectedTime}`,
+      className: "bg-green-100 border-green-500",
+    });
+    setSelectedService("");
+    setSelectedDate(undefined);
+    setSelectedTime("");
+    setStep(1);
   };
 
   return (
@@ -76,14 +121,15 @@ export default function ReservationFlow({ step, setStep, services }: Reservation
                   Selecciona Fecha y Hora
                 </h3>
                 <div className="flex flex-col md:flex-row gap-4">
-                  <div className="flex-1">
+                    <div className="flex-1">
                     <Calendar
                       mode="single"
                       selected={selectedDate}
                       onSelect={(date) => setSelectedDate(date)}
+                      disabled={(date) => date < new Date()}
                       className="rounded-md border bg-white"
                     />
-                  </div>
+                    </div>
                   <div className="flex-1">
                     <div className="grid grid-cols-2 gap-2">
                       {times.map((time) => (
@@ -93,6 +139,8 @@ export default function ReservationFlow({ step, setStep, services }: Reservation
                             selectedTime === time ? "default" : "outline"
                           }
                           onClick={() => setSelectedTime(time)}
+                          disabled={!availableTimes.includes(time)}
+                          className={"disabled:opacity-50 disabled:cursor-not-allowed"}
                         >
                           {time}
                         </Button>
@@ -115,11 +163,26 @@ export default function ReservationFlow({ step, setStep, services }: Reservation
                 </h3>
                 <div className="grid gap-4">
                   <div className="grid w-full max-w-sm items-center gap-1.5">
-                    <Label htmlFor="name" className="text-fuchsia-800 font-bold text-md">Nombre</Label>
-                    <Input type="text" id="name" placeholder="Tu Nombre" className="bg-white" />
+                    <Label
+                      htmlFor="name"
+                      className="text-fuchsia-800 font-bold text-md"
+                    >
+                      Nombre
+                    </Label>
+                    <Input
+                      type="text"
+                      id="name"
+                      placeholder="Tu Nombre"
+                      className="bg-white"
+                    />
                   </div>
                   <div className="grid w-full max-w-sm items-center gap-1.5">
-                    <Label htmlFor="phone" className="text-fuchsia-800 font-bold text-md">Número de Contacto</Label>
+                    <Label
+                      htmlFor="phone"
+                      className="text-fuchsia-800 font-bold text-md"
+                    >
+                      Número de Contacto
+                    </Label>
                     <Input
                       type="tel"
                       id="phone"
@@ -128,7 +191,12 @@ export default function ReservationFlow({ step, setStep, services }: Reservation
                     />
                   </div>
                   <div className="grid w-full max-w-sm items-center gap-1.5">
-                    <Label htmlFor="reason" className="text-fuchsia-800 font-bold text-md">Motivo de la Cita</Label>
+                    <Label
+                      htmlFor="reason"
+                      className="text-fuchsia-800 font-bold text-md"
+                    >
+                      Motivo de la Cita
+                    </Label>
                     <Textarea
                       id="reason"
                       placeholder="Cuéntanos más sobre tu cita"
@@ -137,14 +205,7 @@ export default function ReservationFlow({ step, setStep, services }: Reservation
                   </div>
                 </div>
                 <div className="pt-4">
-                  <Button
-                    onClick={() => {
-                      alert("¡Reserva confirmada! Esperamos verte pronto.");
-                      setStep(1);
-                    }}
-                  >
-                    Confirmar Reserva
-                  </Button>
+                  <Button onClick={handleSubmit}>Confirmar Reserva</Button>
                 </div>
               </div>
             )}
