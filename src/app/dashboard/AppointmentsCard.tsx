@@ -1,3 +1,4 @@
+"use client"
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
 import {
@@ -89,8 +90,8 @@ export default function AppointmentsCard({ services, appointments }: Appointment
                   <div>
                     <h3 className="font-semibold">{appointment.clientName}</h3>
                     <p className="text-sm text-gray-500">
-                      {appointment.service} - {appointment.date}{" "}
-                      {appointment.time}
+                      {appointment.service} - {appointment.day}{" "}
+                      {appointment.hour}
                     </p>
                   </div>
                   <div>

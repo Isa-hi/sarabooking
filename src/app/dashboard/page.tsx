@@ -1,19 +1,14 @@
-"use client"
-
-import { useState } from "react";
 import { TabsContent } from "@/components/ui/tabs";
 import ServicesCard from "./ServicesCard";
 import AppointmentsCard from "./AppointmentsCard";
 import ClientsCard from "./ClientsCard";
 import ReportsCard from "./ReportsCard";
 import { ObtenerServicios } from "../actions";
-import { ServiceType } from "@/types";
 
 export default async function Page() {
-  const [services, setServices] = useState<ServiceType[]>([]);
-  setServices(await ObtenerServicios());
+  const services = await ObtenerServicios();
 
-  const [appointments, setAppointments] = useState([
+  const appointments = [
     {
       id: "1",
       clientName: "María García",
@@ -38,9 +33,9 @@ export default async function Page() {
       hour: "14:00",
       status: "Completado",
     },
-  ]);
+  ];
 
-  const [clients, setClients] = useState([
+  const clients = [
     {
       id: "1",
       name: "María García",
@@ -65,15 +60,13 @@ export default async function Page() {
       appointments: 7,
       preferences: "Facial",
     },
-  ]);
+  ];
 
   const statsData = [
     { id: "s1", service: "Corte de pelo", appointments: 45 },
     { id: "s2", service: "Manicura", appointments: 30 },
     { id: "s3", service: "Facial", appointments: 25 },
   ];
-
- 
 
   return (
     <>
@@ -82,7 +75,7 @@ export default async function Page() {
       </TabsContent>
 
       <TabsContent value="appointments">
-        <AppointmentsCard services={services} appointments={appointments}/>
+        <AppointmentsCard services={services} appointments={appointments} />
       </TabsContent>
 
       <TabsContent value="clients">

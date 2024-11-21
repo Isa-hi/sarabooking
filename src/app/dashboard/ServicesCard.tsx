@@ -8,12 +8,20 @@ import {
 } from "@/components/ui/card";
 import { ServiceType } from "@/types";
 import { Scissors, Sparkles } from "lucide-react";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import EditServiceForm from "./EditServiceForm";
 
 type ServicesCardProps = {
-    services: ServiceType[];
-}
+  services: ServiceType[];
+};
 export default function ServicesCard({ services }: ServicesCardProps) {
-
   const renderIcon = (iconName: string) => {
     switch (iconName) {
       case "Scissors":
@@ -42,9 +50,13 @@ export default function ServicesCard({ services }: ServicesCardProps) {
                 <h3 className="font-semibold">{service.name}</h3>
                 <p className="text-sm text-gray-500">{service.description}</p>
               </div>
-              <Button variant="outline" size="sm">
-                Editar
-              </Button>
+                <Dialog>
+                  <DialogTrigger>Editar</DialogTrigger>
+                  <DialogContent>
+                  <DialogTitle>Formulario para editar servicio</DialogTitle>
+                    <EditServiceForm service={service} />
+                  </DialogContent>
+                </Dialog>
               <Button variant="destructive" size="sm">
                 Eliminar
               </Button>
