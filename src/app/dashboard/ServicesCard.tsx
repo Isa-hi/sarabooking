@@ -7,7 +7,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { ServiceType } from "@/types";
-import { Scissors, Sparkles } from "lucide-react";
+import { PlusIcon, Scissors, Sparkles } from "lucide-react";
 import {
   Dialog,
   DialogContent,
@@ -17,6 +17,8 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import EditServiceForm from "./EditServiceForm";
+import { EliminarServicio } from "../actions";
+import DeleteServiceDialog from "./DeleteServiceDialog";
 
 type ServicesCardProps = {
   services: ServiceType[];
@@ -44,25 +46,48 @@ export default function ServicesCard({ services }: ServicesCardProps) {
       <CardContent>
         <div className="space-y-4">
           {services.map((service) => (
-            <div key={service.id} className="flex items-center space-x-4">
+            <div
+              key={service.id}
+              className="flex items-center space-x-4 border-l-4 border-green-500 p-3 w-1/2"
+            >
               {renderIcon(service.icon)}
               <div>
                 <h3 className="font-semibold">{service.name}</h3>
                 <p className="text-sm text-gray-500">{service.description}</p>
+                <p className="text-sm text-gray-500">{service.cost} $</p>
               </div>
-                <Dialog>
+              <Dialog>
+                <div className="border rounded-md p-2 hover:bg-zinc-200">
                   <DialogTrigger>Editar</DialogTrigger>
-                  <DialogContent>
+                </div>
+                <DialogContent>
                   <DialogTitle>Formulario para editar servicio</DialogTitle>
-                    <EditServiceForm service={service} />
-                  </DialogContent>
-                </Dialog>
-              <Button variant="destructive" size="sm">
-                Eliminar
-              </Button>
+                  <EditServiceForm service={service} />
+                </DialogContent>
+              </Dialog>
+              <Dialog>
+                <div className="bg-red-600 rounded-md p-2 text-white hover:bg-red-700">
+                  <DialogTrigger>Eliminar</DialogTrigger>
+                </div>
+                <DialogContent>
+                  <DeleteServiceDialog serviceId={service.id} />
+                </DialogContent>
+              </Dialog>
             </div>
           ))}
-          <Button>Añadir Nuevo Servicio</Button>
+
+          <Dialog>
+            <DialogTrigger>
+              <div className="bg-black text-white p-2 rounded-md w-full flex">
+                <PlusIcon />
+                Añadir Nuevo Servicio
+              </div>
+            </DialogTrigger>
+            <DialogContent>
+              <DialogTitle>Formulario para editar servicio</DialogTitle>
+              <EditServiceForm />
+            </DialogContent>
+          </Dialog>
         </div>
       </CardContent>
     </Card>

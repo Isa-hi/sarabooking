@@ -1,49 +1,85 @@
-'use client'
+"use client";
 
-import { useState } from 'react'
-import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { Textarea } from "@/components/ui/textarea"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { Scissors, Sparkles, Droplet, Sun } from 'lucide-react'
-import { ServiceType } from '@/types'
-import { ActualizarServicio } from '../actions'
+import { useState } from "react";
+import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Scissors, Sparkles, Droplet, Sun } from "lucide-react";
+import { ServiceType } from "@/types";
+import { ActualizarServicio, CrearServicio } from "../actions";
 
 interface Service {
-  service: ServiceType
+  service?: ServiceType;
 }
 
-export default function EditServiceForm({ service }: Service ) {
-  const [name, setName] = useState(service.name || '')
-  const [description, setDescription] = useState(service.description || '')
-  const [cost, setCost] = useState(service.cost || 0)
-  const [icon, setIcon] = useState(service.icon || '')
+export default function EditServiceForm({ service }: Service) {
+  const [name, setName] = useState(service?.name || "");
+  const [description, setDescription] = useState(service?.description || "");
+  const [cost, setCost] = useState(service?.cost || 0);
+  const [icon, setIcon] = useState(service?.icon || "");
 
   const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault()
-    
-    ActualizarServicio(service.id, {name, description, cost, icon})
-      .then(() => {
-        window.location.reload()
-      })
-      .catch((error) => {
-        console.error('Error updating service:', error)
-      })
-  }
+    e.preventDefault();
+
+    if (service) {
+      ActualizarServicio(service.id, { name, description, cost, icon })
+        .then(() => {
+          window.location.reload();
+        })
+        .catch((error) => {
+          console.error("Error updating service:", error);
+        });
+    } else {
+        CrearServicio({ name, description, cost, icon })
+        .then(() => {
+          window.location.reload();
+        })
+        .catch((error) => {
+          console.error("Error creating service:", error);
+        });
+    }
+  };
 
   const iconOptions = [
-    { value: 'Scissors', label: 'Tijeras', icon: <Scissors className="mr-2 h-4 w-4" /> },
-    { value: 'Sparkles', label: 'Destellos', icon: <Sparkles className="mr-2 h-4 w-4" /> },
-    { value: 'Droplet', label: 'Gota', icon: <Droplet className="mr-2 h-4 w-4" /> },
-    { value: 'Sun', label: 'Sol', icon: <Sun className="mr-2 h-4 w-4" /> },
-  ]
+    {
+      value: "Scissors",
+      label: "Tijeras",
+      icon: <Scissors className="mr-2 h-4 w-4" />,
+    },
+    {
+      value: "Sparkles",
+      label: "Destellos",
+      icon: <Sparkles className="mr-2 h-4 w-4" />,
+    },
+    {
+      value: "Droplet",
+      label: "Gota",
+      icon: <Droplet className="mr-2 h-4 w-4" />,
+    },
+    { value: "Sun", label: "Sol", icon: <Sun className="mr-2 h-4 w-4" /> },
+  ];
 
   return (
     <Card className="w-full max-w-md mx-auto">
       <CardHeader>
-        <CardTitle>{service ? 'Editar Servicio' : 'Añadir Nuevo Servicio'}</CardTitle>
+        <CardTitle>
+          {service ? "Editar Servicio" : "Añadir Nuevo Servicio"}
+        </CardTitle>
       </CardHeader>
       <form onSubmit={handleSubmit}>
         <CardContent className="space-y-4">
@@ -68,7 +104,7 @@ export default function EditServiceForm({ service }: Service ) {
             />
           </div>
           <div className="space-y-2">
-            <Label htmlFor="cost">Costo (€)</Label>
+            <Label htmlFor="cost">Costo ($)</Label>
             <Input
               id="cost"
               type="number"
@@ -100,10 +136,10 @@ export default function EditServiceForm({ service }: Service ) {
         </CardContent>
         <CardFooter>
           <Button type="submit" className="w-full">
-            {service ? 'Actualizar Servicio' : 'Añadir Servicio'}
+            {service ? "Actualizar Servicio" : "Añadir Servicio"}
           </Button>
         </CardFooter>
       </form>
     </Card>
-  )
+  );
 }
