@@ -1,4 +1,5 @@
 "use client";
+import { CrearUsuario } from "@/app/actions";
 import { Button } from "@/components/ui/button";
 import {
   CardContent,
@@ -10,7 +11,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { EyeIcon, EyeOffIcon } from "lucide-react";
-import { useState } from "react";
+import React, { useState } from "react";
 
 export default function Page() {
   const [showPassword, setShowPassword] = useState(false);
@@ -19,6 +20,28 @@ export default function Page() {
   const togglePasswordVisibility = () => setShowPassword(!showPassword);
   const toggleConfirmPasswordVisibility = () =>
     setShowConfirmPassword(!showConfirmPassword);
+
+  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    const formData = new FormData(event.currentTarget);
+    const data = {
+      name: formData.get("name")!.toString(),
+      email: formData.get("email")!.toString(),
+      phone: formData.get("phone")!.toString(),
+      password: formData.get("password")!.toString(),
+    };
+
+    if (data.password !== formData.get("confirmPassword")) {
+      alert("Las contraseñas no coinciden");
+    } else {
+      if(data.name&& data.email&& data.password && data.phone){
+        CrearUsuario(data).then(() => {
+          alert("Usuario creado correctamente");
+          window.location.href = "/auth/login";
+        });
+      }
+    }
+  };
 
   return (
     <>
@@ -31,18 +54,29 @@ export default function Page() {
         </CardDescription>
       </CardHeader>
       <CardContent>
-        <form>
+        <form onSubmit={handleSubmit}>
           <div className="space-y-4">
             <div className="space-y-2">
               <Label htmlFor="name">Nombre Completo</Label>
-              <Input id="name" placeholder="María García" required />
+              <Input name="name" id="name" placeholder="María García" required />
             </div>
             <div className="space-y-2">
               <Label htmlFor="email">Correo Electrónico</Label>
               <Input
                 id="email"
                 type="email"
+                name="email"
                 placeholder="tu@email.com"
+                required
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="phone">Número celular</Label>
+              <Input
+                id="phone"
+                type="number"
+                name="phone"
+                placeholder="2211221122"
                 required
               />
             </div>
@@ -51,6 +85,7 @@ export default function Page() {
               <div className="relative">
                 <Input
                   id="password"
+                  name="password"
                   type={showPassword ? "text" : "password"}
                   placeholder="••••••••"
                   required
@@ -75,6 +110,7 @@ export default function Page() {
               <div className="relative">
                 <Input
                   id="confirmPassword"
+                  name="confirmPassword"
                   type={showConfirmPassword ? "text" : "password"}
                   placeholder="••••••••"
                   required
@@ -95,19 +131,22 @@ export default function Page() {
               </div>
             </div>
           </div>
+          <CardFooter className="flex flex-col space-y-4">
+            <Button className="w-full mt-5" type="submit">
+              Registrarse
+            </Button>
+            <p className="text-sm text-center text-gray-600">
+              ¿Ya tienes una cuenta?{" "}
+              <a
+                href="/auth/login"
+                className="text-primary hover:underline text-fuchsia-600"
+              >
+                Inicia sesión aquí
+              </a>
+            </p>
+          </CardFooter>
         </form>
       </CardContent>
-      <CardFooter className="flex flex-col space-y-4">
-        <Button className="w-full" type="submit">
-          Registrarse
-        </Button>
-        <p className="text-sm text-center text-gray-600">
-          ¿Ya tienes una cuenta?{" "}
-          <a href="/auth/login" className="text-primary hover:underline text-fuchsia-600">
-            Inicia sesión aquí
-          </a>
-        </p>
-      </CardFooter>
     </>
   );
 }

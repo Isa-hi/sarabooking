@@ -2,7 +2,7 @@
 
 import { prisma } from "@/lib/prisma";
 import type { ServiceType } from "@/types";
-import { Appointment } from "@prisma/client";
+import { Appointment, User } from "@prisma/client";
 
 // Service Actions
 export async function ObtenerServicios() {
@@ -49,4 +49,13 @@ export async function ObtenerHorariosDisponibles({ serviceId, date }: { serviceI
   const appointments = await prisma.appointment.findMany({ where: { serviceId, day: date } });
   return service.schedules.filter((time) => !appointments.some((appointment) => appointment.hour === time));
   
+}
+
+// User Actions
+export async function ObtenerUsuarioPorId(id: string) {
+  return await prisma.user.findUnique({ where: { id } });
+}
+
+export async function CrearUsuario(data: Omit<User, "id" | "createdAt" | "updatedAt">) {
+  return await prisma.user.create({ data });
 }

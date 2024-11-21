@@ -12,7 +12,7 @@ model User {
   name         String
   email        String        @unique
   phone        String?
-  preferences  String
+  password     String
   appointments Appointment[]
 }
 
