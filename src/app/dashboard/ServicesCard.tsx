@@ -15,8 +15,8 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import EditServiceForm from "./EditServiceForm";
-import DeleteServiceDialog from "./DeleteServiceDialog";
+import EditServiceForm from "../../components/services/EditServiceForm";
+import DeleteServiceDialog from "../../components/services/DeleteServiceDialog";
 import type { Service } from "@prisma/client";
 
 type ServicesCardProps = {

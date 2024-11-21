@@ -7,7 +7,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { ServiceType } from "@/types";
-import { EliminarServicio } from "../actions";
+import { EliminarServicio } from "../../app/actions";
 
 type DeleteServiceDialogProps = {
     serviceId: ServiceType["id"];

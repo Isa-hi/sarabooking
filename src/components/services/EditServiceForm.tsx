@@ -20,7 +20,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Scissors, Sparkles, Droplet, Sun } from "lucide-react";
-import { ActualizarServicio, CrearServicio } from "../actions";
+import { ActualizarServicio, CrearServicio } from "../../app/actions";
 import type { Service } from "@prisma/client"
 
 interface props {
