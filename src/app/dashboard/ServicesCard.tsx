@@ -6,7 +6,6 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { ServiceType } from "@/types";
 import { Droplet, PlusIcon, Scissors, Sparkles, Sun } from "lucide-react";
 import {
   Dialog,
@@ -17,11 +16,11 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import EditServiceForm from "./EditServiceForm";
-import { EliminarServicio } from "../actions";
 import DeleteServiceDialog from "./DeleteServiceDialog";
+import type { Service } from "@prisma/client";
 
 type ServicesCardProps = {
-  services: ServiceType[];
+  services: Service[];
 };
 export default function ServicesCard({ services }: ServicesCardProps) {
   const renderIcon = (iconName: string) => {

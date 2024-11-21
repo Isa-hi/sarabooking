@@ -20,24 +20,25 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Scissors, Sparkles, Droplet, Sun } from "lucide-react";
-import { ServiceType } from "@/types";
 import { ActualizarServicio, CrearServicio } from "../actions";
+import type { Service } from "@prisma/client"
 
-interface Service {
-  service?: ServiceType;
+interface props {
+  service?: Service;
 }
 
-export default function EditServiceForm({ service }: Service) {
+export default function EditServiceForm({ service }: props) {
   const [name, setName] = useState(service?.name || "");
   const [description, setDescription] = useState(service?.description || "");
   const [cost, setCost] = useState(service?.cost || 0);
   const [icon, setIcon] = useState(service?.icon || "");
+  const [schedules, setSchedules] = useState(service?.schedules || []);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
     if (service) {
-      ActualizarServicio(service.id, { name, description, cost, icon })
+      ActualizarServicio(service.id, { name, description, cost, icon, schedules })
         .then(() => {
           window.location.reload();
         })
@@ -45,7 +46,7 @@ export default function EditServiceForm({ service }: Service) {
           console.error("Error updating service:", error);
         });
     } else {
-        CrearServicio({ name, description, cost, icon })
+        CrearServicio({ name, description, cost, icon, schedules })
         .then(() => {
           window.location.reload();
         })
@@ -103,6 +104,33 @@ export default function EditServiceForm({ service }: Service) {
               required
             />
           </div>
+            <div className="space-y-2">
+            <Label htmlFor="schedules">Horarios</Label>
+            <div className="grid grid-cols-4 gap-2">
+              {Array.from({ length: 12 }, (_, i) => {
+              const hour = i + 8;
+              const time = `${hour}:00${hour < 12 ? "am" : "pm"}`;
+              const selectedSchedule = schedules.includes(time);
+              return (
+                <Button
+                key={time}
+                className={selectedSchedule ? "bg-green-600" : "bg-white text-black"}
+                onClick={(e) => {
+                  e.preventDefault();
+                  setSchedules((prev) =>
+                  selectedSchedule
+                    ? prev.filter((t) => t !== time)
+                    : [...prev, time]
+                  );
+                  console.log(schedules);
+                }}
+                >
+                {time}
+                </Button>
+              );
+              })}
+            </div>
+            </div>
           <div className="space-y-2">
             <Label htmlFor="cost">Costo ($)</Label>
             <Input

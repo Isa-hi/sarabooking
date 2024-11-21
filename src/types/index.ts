@@ -4,6 +4,7 @@ export type ServiceType = {
   icon: string;
   description: string;
   cost: number;
+  schedules: string[];
 };
 
 export type AppointmentType = {

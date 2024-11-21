@@ -12,14 +12,14 @@ export async function ObtenerServicioPorId(id: ServiceType["id"]) {
 }
 
 export async function CrearServicio(
-  data: Pick<ServiceType, "name" | "icon" | "description" | "cost">
+  data: Pick<ServiceType, "name" | "icon" | "description" | "cost" | "schedules">
 ) {
   return await prisma.service.create({ data });
 }
 
 export async function ActualizarServicio(
   id: ServiceType["id"],
-  data: Pick<ServiceType, "name" | "icon" | "description" | "cost">
+  data: Pick<ServiceType, "name" | "icon" | "description" | "cost" | "schedules">
 ) {
   return await prisma.service.update({ where: { id }, data });
 }
