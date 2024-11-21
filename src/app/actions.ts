@@ -56,6 +56,10 @@ export async function ObtenerUsuarioPorId(id: string) {
   return await prisma.user.findUnique({ where: { id } });
 }
 
+export async function IniciarSesion(email: string, password: string) {
+  return await prisma.user.findFirst({ where: { email, password } });
+}
+
 export async function CrearUsuario(data: Omit<User, "id" | "createdAt" | "updatedAt">) {
   return await prisma.user.create({ data });
 }
