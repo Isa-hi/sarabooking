@@ -12,6 +12,8 @@ type props = {
 export default function LandingPage({ services }: props) {
   const [step, setStep] = useState(1);
 
+  const user = localStorage.getItem("user");
+
   const renderIcon = (iconName: string) => {
     switch (iconName) {
       case "Scissors":
@@ -27,6 +29,16 @@ export default function LandingPage({ services }: props) {
     }
   };
 
+  const handleStartReservationFlow = () => {
+    if (!user) {
+      alert("Para hacer una reservación, primero inicia sesión o regístrate");
+      window.location.href = "/auth/login";
+      return;
+    } else {
+      setStep(2);
+    }
+  };
+
   return (
     <>
       <section className="py-12 px-4 text-center bg-gradient-to-r from-pink-100 to-purple-100">
@@ -34,7 +46,7 @@ export default function LandingPage({ services }: props) {
         <p className="text-xl mb-8">
           Tu destino único para belleza y relajación
         </p>
-        <Button size="lg" onClick={() => setStep(2)}>
+        <Button size="lg" onClick={handleStartReservationFlow}>
           Reservar Ahora 📅
         </Button>
       </section>

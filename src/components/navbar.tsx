@@ -4,7 +4,18 @@ import { Button } from "./ui/button";
 
 export default function Navbar() {
   const router = useRouter();
-  const user = localStorage.getItem("user");
+  let user = null;
+  let isUserAdmin = false;
+  if (typeof window !== "undefined") {
+    user = localStorage.getItem("user");
+  }
+  if (user) {
+    const userObject = JSON.parse(user);
+    const adminEmail = "ejemplo@ejemplo.mx";
+    userObject.email === adminEmail
+      ? (isUserAdmin = true)
+      : (isUserAdmin = false);
+  }
 
   return (
     <>
@@ -14,16 +25,26 @@ export default function Navbar() {
         </h1>
         <div className="gap-4 flex">
           {user?.length ? (
-            <Button
-              variant="secondary"
-              onClick={() => {
-                localStorage.removeItem("user");
-                window.location.reload()
-              }}
-            >
-              {" "}
-              Cerrar sesión
-            </Button>
+            <>
+              <Button
+                variant="secondary"
+                onClick={() => {
+                  localStorage.removeItem("user");
+                  window.location.reload();
+                }}
+              >
+                {" "}
+                Cerrar sesión
+              </Button>
+              {isUserAdmin && (
+                <Button
+                  variant="ghost"
+                  onClick={() => router.push("/dashboard")}
+                >
+                  Admin Dashboard
+                </Button>
+              )}
+            </>
           ) : (
             <>
               <Button

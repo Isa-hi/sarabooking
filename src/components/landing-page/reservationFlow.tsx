@@ -8,7 +8,6 @@ import { ServiceType } from "@/types";
 import { Scissors, Sparkles, Droplet, Sun } from "lucide-react";
 import { CrearCita, ObtenerHorariosDisponibles, ObtenerServicioPorNombre } from "@/app/actions";
 import { useToast } from "@/hooks/use-toast";
-import { cn } from "@/lib/utils";
 
 type ReservationFlowProps = {
   step: number;
@@ -29,6 +28,9 @@ export default function ReservationFlow({
   const [times, setTimes] = useState<string[]>([]);
   const [availableTimes, setAvailableTimes] = useState<string[]>([]);
 
+  const user = localStorage.getItem("user")!;
+  const userObject = JSON.parse(user);
+
   useEffect(() => {
     const fetchService = async () => {
       try {
@@ -44,7 +46,7 @@ export default function ReservationFlow({
     };
 
     fetchService();
-  }, [selectedService]);
+  }, [selectedService, selectedDate]);
 
   const renderIcon = (iconName: string) => {
     switch (iconName) {
@@ -67,7 +69,7 @@ export default function ReservationFlow({
       day: selectedDate,
       hour: selectedTime,
       serviceId: serviceFromDB.id,
-      userId: "anonymous",
+      userId: userObject.id,
     });
     toast({
       title: "Reserva Exitosa",
