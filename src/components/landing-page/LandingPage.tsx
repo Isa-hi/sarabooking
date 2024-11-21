@@ -4,12 +4,28 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import ReservationFlow from "@/components/landing-page/reservationFlow";
 import { ServiceType } from "@/types";
 import { useState } from "react";
+import { Droplet, Scissors, Sparkles, Sun } from "lucide-react";
 
 type props = {
   services: ServiceType[];
 };
 export default function LandingPage({ services }: props) {
   const [step, setStep] = useState(1);
+
+  const renderIcon = (iconName: string) => {
+    switch (iconName) {
+      case "Scissors":
+        return <Scissors className="w-6 h-6" />;
+      case "Sparkles":
+        return <Sparkles className="w-6 h-6" />;
+      case "Droplet":
+        return <Droplet className="w-6 h-6" />;
+      case "Sun":
+        return <Sun className="w-6 h-6" />;
+      default:
+        return null;
+    }
+  };
 
   return (
     <>
@@ -34,7 +50,7 @@ export default function LandingPage({ services }: props) {
             <Card key={service.name} className="text-center">
               <CardHeader>
                 <CardTitle className="flex items-center justify-center gap-2">
-                  {service.icon}
+                  {renderIcon(service.icon)}
                   {service.name}
                 </CardTitle>
               </CardHeader>

@@ -5,6 +5,7 @@ import { Label } from "../ui/label";
 import { Input } from "../ui/input";
 import { Textarea } from "../ui/textarea";
 import { ServiceType } from "@/types";
+import { Scissors, Sparkles, Droplet, Sun } from "lucide-react";
 
 type ReservationFlowProps = {
     step: number;
@@ -18,6 +19,21 @@ export default function ReservationFlow({ step, setStep, services }: Reservation
   const [selectedTime, setSelectedTime] = useState("");
 
   const times = ['10:00', '11:00', '12:00', '14:00', '15:00', '16:00']
+
+  const renderIcon = (iconName: string) => {
+    switch (iconName) {
+      case "Scissors":
+        return <Scissors className="w-6 h-6" />;
+      case "Sparkles":
+        return <Sparkles className="w-6 h-6" />;
+      case "Droplet":
+        return <Droplet className="w-6 h-6" />;
+      case "Sun":
+        return <Sun className="w-6 h-6" />;
+      default:
+        return null;
+    }
+  };
 
   return (
     <>
@@ -46,7 +62,7 @@ export default function ReservationFlow({ step, setStep, services }: Reservation
                       }}
                     >
                       <div className="flex flex-col items-center gap-2">
-                        {service.icon}
+                        {renderIcon(service.icon)}
                         {service.name}
                       </div>
                     </Button>

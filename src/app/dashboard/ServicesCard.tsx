@@ -7,7 +7,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { ServiceType } from "@/types";
-import { PlusIcon, Scissors, Sparkles } from "lucide-react";
+import { Droplet, PlusIcon, Scissors, Sparkles, Sun } from "lucide-react";
 import {
   Dialog,
   DialogContent,
@@ -30,6 +30,10 @@ export default function ServicesCard({ services }: ServicesCardProps) {
         return <Scissors className="w-6 h-6" />;
       case "Sparkles":
         return <Sparkles className="w-6 h-6" />;
+      case "Droplet":
+        return <Droplet className="w-6 h-6" />;
+      case "Sun":
+        return <Sun className="w-6 h-6" />;
       default:
         return null;
     }
