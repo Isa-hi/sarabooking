@@ -28,6 +28,11 @@ export default function ReservationFlow({
   const [times, setTimes] = useState<string[]>([]);
   const [availableTimes, setAvailableTimes] = useState<string[]>([]);
 
+  // FormData
+  const [motivo, setMotivo] = useState("");
+  const [nombre, setNombre] = useState("");
+  const [telefono, setTelefono] = useState("");
+
   const user = localStorage.getItem("user")!;
   const userObject = JSON.parse(user);
 
@@ -70,6 +75,8 @@ export default function ReservationFlow({
       hour: selectedTime,
       serviceId: serviceFromDB.id,
       userId: userObject.id,
+      status: "Pendiente",
+      motivo: motivo,
     });
     toast({
       title: "Reserva Exitosa",
@@ -166,34 +173,6 @@ export default function ReservationFlow({
                 <div className="grid gap-4">
                   <div className="grid w-full max-w-sm items-center gap-1.5">
                     <Label
-                      htmlFor="name"
-                      className="text-fuchsia-800 font-bold text-md"
-                    >
-                      Nombre
-                    </Label>
-                    <Input
-                      type="text"
-                      id="name"
-                      placeholder="Tu Nombre"
-                      className="bg-white"
-                    />
-                  </div>
-                  <div className="grid w-full max-w-sm items-center gap-1.5">
-                    <Label
-                      htmlFor="phone"
-                      className="text-fuchsia-800 font-bold text-md"
-                    >
-                      Número de Contacto
-                    </Label>
-                    <Input
-                      type="tel"
-                      id="phone"
-                      placeholder="Tu Número de Teléfono"
-                      className="bg-white"
-                    />
-                  </div>
-                  <div className="grid w-full max-w-sm items-center gap-1.5">
-                    <Label
                       htmlFor="reason"
                       className="text-fuchsia-800 font-bold text-md"
                     >
@@ -203,6 +182,7 @@ export default function ReservationFlow({
                       id="reason"
                       placeholder="Cuéntanos más sobre tu cita"
                       className="bg-white"
+                      onChange={(e) => setMotivo(e.target.value)}
                     />
                   </div>
                 </div>

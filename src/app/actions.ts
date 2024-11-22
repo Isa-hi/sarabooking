@@ -56,6 +56,18 @@ export async function ObtenerHorariosDisponibles({ serviceId, date }: { serviceI
 }
 
 // User Actions
+export async function ObtenerUsuarios() {
+  return await prisma.user.findMany({});
+}
+
+export async function ObtenerUsuarioConCitasTotales() {
+  return await prisma.user.findMany({
+    include: {
+      appointments: true,
+    },
+  });
+}
+
 export async function ObtenerUsuarioPorId(id: string) {
   return await prisma.user.findUnique({ where: { id } });
 }

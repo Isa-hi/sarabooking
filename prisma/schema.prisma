@@ -24,6 +24,7 @@ model Appointment {
   userId    String
   service   Service  @relation(fields: [serviceId], references: [id])
   serviceId String
+  motivo    String  @default("Sin motivo")
   status    String  @default("Pendiente")
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

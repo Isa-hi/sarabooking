@@ -137,6 +137,7 @@ export default function AppointmentsCard({
                     <SelectItem value="Confirmado">Confirmado</SelectItem>
                     <SelectItem value="Pendiente">Pendiente</SelectItem>
                     <SelectItem value="Completado">Completado</SelectItem>
+                    <SelectItem value="Cancelado">Cancelado</SelectItem>
                   </SelectContent>
                 </Select>
                 <Button className="w-full" onClick={handleStatusFilter}>
@@ -144,7 +145,7 @@ export default function AppointmentsCard({
                 </Button>
               </div>
             </div>
-            <div className="space-y-2">
+            <div className="space-y-2 w-1/2">
               {filteredAppointments.map((appointment) => (
                 <div
                   key={appointment.id}
@@ -156,6 +157,7 @@ export default function AppointmentsCard({
                       {appointment.service.name} -{" "}
                       {appointment.day.toLocaleDateString()} {appointment.hour}
                     </p>
+                    <p>Motivo: {appointment.motivo}</p>
                   </div>
                   <div>
                     <span
@@ -164,19 +166,13 @@ export default function AppointmentsCard({
                           ? "bg-green-100 text-green-800"
                           : appointment.status === "Pendiente"
                           ? "bg-yellow-100 text-yellow-800"
+                          : appointment.status === "Cancelado"
+                          ? "bg-red-100 text-red-800"
                           : "bg-blue-100 text-blue-800"
                       }`}
                     >
                       {appointment.status}
                     </span>
-                  </div>
-                  <div>
-                    <Button variant="outline" size="sm" className="mr-2">
-                      Modificar
-                    </Button>
-                    <Button variant="destructive" size="sm">
-                      Cancelar
-                    </Button>
                   </div>
                 </div>
               ))}

@@ -1,9 +1,9 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { ClientType } from "@/types";
+import { Appointment, User } from "@prisma/client";
 
 type props = {
-    clients: ClientType[];
+  clients: (User & { appointments: Appointment[] })[];
 }
 export default function ClientsCard({ clients }: props) {
   return (
@@ -23,8 +23,10 @@ export default function ClientsCard({ clients }: props) {
                 <p className="text-sm text-gray-500">
                   {client.email} - {client.phone}
                 </p>
-                <p className="text-sm">Citas totales: {client.appointments}</p>
-                <p className="text-sm">Preferencias: {client.preferences}</p>
+                <p className="text-sm text-gray-500">
+                  {/* client */}
+                </p>
+                <p className="text-sm">Citas totales: {client.appointments.length}</p>
                 <div className="mt-2">
                   <Button variant="outline" size="sm" className="mr-2">
                     Ver Historial
