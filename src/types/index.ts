@@ -24,9 +24,3 @@ export type ClientType = {
   appointments: number;
   preferences: string;
 };
-
-export type StatsType = {
-  id: String;
-  service: string;
-  appointments: number;
-};

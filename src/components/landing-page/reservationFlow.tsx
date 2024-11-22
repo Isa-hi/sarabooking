@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import { Button } from "../ui/button";
 import { Calendar } from "../ui/calendar";
 import { Label } from "../ui/label";
-import { Input } from "../ui/input";
 import { Textarea } from "../ui/textarea";
 import { ServiceType } from "@/types";
 import { Scissors, Sparkles, Droplet, Sun } from "lucide-react";

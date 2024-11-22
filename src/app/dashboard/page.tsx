@@ -3,7 +3,7 @@ import ServicesCard from "./ServicesCard";
 import AppointmentsCard from "./AppointmentsCard";
 import ClientsCard from "./ClientsCard";
 import ReportsCard from "./ReportsCard";
-import { getServiceNames, ObtenerCitasExtendido, ObtenerServicios, ObtenerUsuarioConCitasTotales, ObtenerUsuarios } from "../actions";
+import { getServiceNames, ObtenerCitasExtendido, ObtenerServicios, ObtenerUsuarioConCitasTotales } from "../actions";
 
 export default async function Page() {
   const services = await ObtenerServicios();

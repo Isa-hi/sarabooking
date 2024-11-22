@@ -2,6 +2,7 @@
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { Button } from "./ui/button";
+import Link from "next/link";
 
 export default function Navbar() {
   const router = useRouter();
@@ -22,7 +23,7 @@ export default function Navbar() {
     <>
       <nav className="flex items-center justify-between p-4 bg-primary text-primary-foreground">
         <h1 className="text-2xl font-bold">
-          <a href="/">✨ SaraBooking </a>{" "}
+          <Link href="/">✨ SaraBooking </Link>{" "}
         </h1>
         <div className="gap-4 flex">
           {user ? (

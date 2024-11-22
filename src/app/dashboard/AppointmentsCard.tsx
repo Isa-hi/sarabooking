@@ -18,7 +18,7 @@ import {
 } from "@/components/ui/select";
 import { Appointment, Service, User } from "@prisma/client";
 import { useState } from "react";
-import { Edit, Trash } from "lucide-react";
+import { Edit } from "lucide-react";
 import {
   Dialog,
   DialogContent,
@@ -47,7 +47,7 @@ export default function AppointmentsCard({
   const [filteredAppointments, setFilteredAppointments] =
     useState(appointments);
 
-  const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
+  const [, setIsEditDialogOpen] = useState(false); 
   const [currentAppointment, setCurrentAppointment] =
     useState<Appointment | null>(null);
 
