@@ -1,5 +1,6 @@
 "use server";
 
+import { transport } from "@/lib/nodemailer";
 import { prisma } from "@/lib/prisma";
 import type { ServiceType } from "@/types";
 import { Appointment, User } from "@prisma/client";
@@ -104,4 +105,14 @@ export async function getServiceNames(serviceIds: string[]) {
     acc[service.id] = service.name
     return acc
   }, {} as Record<string, string>)
+}
+
+export async function EnviarEmail({ fromData, toData, subjectData, textData, htmlData } : { fromData: string, toData: string, subjectData: string, textData: string, htmlData: string }) {
+  console.log("Sending email to", toData); 
+  try {
+    return await transport.sendMail({ from: fromData, to: toData, subject: subjectData, text: textData, html: htmlData });
+  } catch (error) {
+    console.error("Error sending email:", error);
+    throw error;
+  }
 }

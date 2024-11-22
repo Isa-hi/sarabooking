@@ -5,7 +5,7 @@ import { Label } from "../ui/label";
 import { Textarea } from "../ui/textarea";
 import { ServiceType } from "@/types";
 import { Scissors, Sparkles, Droplet, Sun } from "lucide-react";
-import { CrearCita, ObtenerHorariosDisponibles, ObtenerServicioPorNombre } from "@/app/actions";
+import { CrearCita, EnviarEmail, ObtenerHorariosDisponibles, ObtenerServicioPorNombre } from "@/app/actions";
 import { useToast } from "@/hooks/use-toast";
 
 type ReservationFlowProps = {
@@ -66,25 +66,42 @@ export default function ReservationFlow({
     }
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     if (!selectedDate || !selectedTime || !serviceFromDB) return;
-    CrearCita({
-      day: selectedDate,
-      hour: selectedTime,
-      serviceId: serviceFromDB.id,
-      userId: userObject.id,
-      status: "Pendiente",
-      motivo: motivo,
-    });
-    toast({
-      title: "Reserva Exitosa",
-      description: `Tu cita para ${selectedService} ha sido reservada para el ${selectedDate?.toLocaleDateString()} a las ${selectedTime}`,
-      className: "bg-green-100 border-green-500",
-    });
-    setSelectedService("");
-    setSelectedDate(undefined);
-    setSelectedTime("");
-    setStep(1);
+    try {
+      await CrearCita({
+        day: selectedDate,
+        hour: selectedTime,
+        serviceId: serviceFromDB.id,
+        userId: userObject.id,
+        status: "Pendiente",
+        motivo: motivo,
+      });
+      await EnviarEmail({
+        fromData: `reservas@sara.com`,
+        toData: userObject.email,
+        subjectData: `Reserva de Cita`,
+        textData: `Tu cita para ${selectedService} ha sido reservada para el ${selectedDate?.toLocaleDateString()} a las ${selectedTime}`,
+        htmlData: `<p>Tu cita para ${selectedService} ha sido reservada para el ${selectedDate?.toLocaleDateString()} a las ${selectedTime}</p>`,
+      });
+      toast({
+        title: "Reserva Exitosa",
+        description: `Tu cita para ${selectedService} ha sido reservada para el ${selectedDate?.toLocaleDateString()} a las ${selectedTime}`,
+        className: "bg-green-100 border-green-500",
+      });
+    } catch (error) {
+      console.error("Error during reservation:", error);
+      toast({
+        title: "Error",
+        description: "Hubo un error al procesar tu reserva. Por favor, intenta nuevamente.",
+        className: "bg-red-100 border-red-500",
+      });
+    } finally {
+      setSelectedService("");
+      setSelectedDate(undefined);
+      setSelectedTime("");
+      setStep(1);
+    }
   };
 
   return (
