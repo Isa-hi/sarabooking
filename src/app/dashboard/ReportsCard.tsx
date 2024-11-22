@@ -1,75 +1,89 @@
+"use client"
+
+import { Appointment } from "@prisma/client";
+import { useMemo } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import type { StatsType } from "@/types";
-import {
-    BarChart,
-    Bar,
-    XAxis,
-    YAxis,
-    CartesianGrid,
-    Tooltip,
-    Legend,
-    ResponsiveContainer,
-} from "recharts";
+import { Bar, BarChart, ResponsiveContainer, XAxis, YAxis } from "recharts";
+import { ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart";
 
 type Props = {
-    statsData: StatsType[];
+  appointments: Appointment[];
+  serviceNames: Record<string, string>;
+};
+
+// Function to generate a pastel color
+function generatePastelColor(seed: string) {
+  let hash = 0;
+  for (let i = 0; i < seed.length; i++) {
+    hash = seed.charCodeAt(i) + ((hash << 5) - hash);
+  }
+  const hue = hash % 360;
+  return `hsl(${hue}, 70%, 80%)`;
 }
-export default function ReportsCard({ statsData }: Props) {
+
+export default function ReportsCard({ appointments, serviceNames }: Props) {
+  const chartData = useMemo(() => {
+    const serviceCounts = appointments.reduce((acc, appointment) => {
+      acc[appointment.serviceId] = (acc[appointment.serviceId] || 0) + 1;
+      return acc;
+    }, {} as Record<string, number>);
+
+    return Object.entries(serviceCounts).map(([serviceId, count]) => ({
+      serviceType: serviceNames[serviceId] || serviceId,
+      count,
+      fill: generatePastelColor(serviceId)
+    }));
+  }, [appointments, serviceNames]);
+
   return (
-    <>
-      <Card>
-        <CardHeader>
-          <CardTitle>Informes y Estadísticas</CardTitle>
-          <CardDescription>
-            Analiza el rendimiento del negocio y el comportamiento de los
-            clientes
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <div className="space-y-8">
-            <div>
-              <h3 className="text-lg font-semibold mb-2">
-                Ocupación de Citas
-              </h3>
-              {/* <ResponsiveContainer width="100%" height={300}>
-                <BarChart data={statsData}>
-                  <CartesianGrid strokeDasharray="3 3" />
-                  <XAxis dataKey="name" />
-                  <YAxis />
-                  <Tooltip />
-                  <Legend />
-                  <Bar dataKey="appointments" fill="#8884d8" />
-                </BarChart>
-              </ResponsiveContainer> */}
-            </div>
-            <div>
-              <h3 className="text-lg font-semibold mb-2">
-                Servicios Más Demandados
-              </h3>
-              <ul className="list-disc pl-5">
-                {statsData
-                  .sort((a, b) => b.appointments - a.appointments)
-                  .map((service, index) => (
-                    <li key={index}>
-                      {service.service}: {service.appointments} citas
-                    </li>
-                  ))}
-              </ul>
-            </div>
-            <div>
-              <h3 className="text-lg font-semibold mb-2">
-                Análisis de Comportamiento de Clientes
-              </h3>
-              <p>Frecuencia promedio de visitas: 2.5 veces al mes</p>
-              <p>
-                Servicios más solicitados por clientes recurrentes: Corte de
-                pelo, Manicura
-              </p>
-              <p>Tasa de cancelación: 5%</p>
-            </div>
-          </div>
-        </CardContent>
-      </Card>
-    </>
+    <Card className="w-full max-w-3xl">
+      <CardHeader>
+        <CardTitle>Reporte de servicios</CardTitle>
+        <CardDescription>Gráfica de servicios más populares</CardDescription>
+      </CardHeader>
+      <CardContent>
+        <ChartContainer
+          config={{
+            count: {
+              label: "Count",
+              color: "hsl(var(--chart-1))",
+            },
+          }}
+          className="h-[300px]"
+        >
+          <ResponsiveContainer width="100%" height="100%">
+            <BarChart data={chartData}>
+              <XAxis
+                dataKey="serviceType"
+                tickLine={false}
+                axisLine={false}
+                interval={0}
+                tick={{ fontSize: 12, textAnchor: 'end' }}
+                height={70}
+              />
+              <YAxis />
+              <ChartTooltip
+                content={({ active, payload }) => {
+                  if (active && payload && payload.length) {
+                    const data = payload[0].payload;
+                    return (
+                      <ChartTooltipContent>
+                        <div className="flex flex-col">
+                          <span className="text-lg font-bold">{data.serviceType}</span>
+                          <span>{data.count} appointments</span>
+                        </div>
+                      </ChartTooltipContent>
+                    );
+                  }
+                  return null;
+                }}
+              />
+              <Bar dataKey="count" fill="var(--color-count)" radius={[4, 4, 0, 0]} />
+            </BarChart>
+          </ResponsiveContainer>
+        </ChartContainer>
+      </CardContent>
+    </Card>
   );
 }
+

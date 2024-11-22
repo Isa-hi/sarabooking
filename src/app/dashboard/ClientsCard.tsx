@@ -1,4 +1,3 @@
-import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
@@ -13,7 +12,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@radix-ui/react-dialog";
-import { ObtenerServicioPorId, ObtenerServicios } from "../actions";
+import { ObtenerServicioPorId } from "../actions";
 
 type props = {
   clients: (User & { appointments: Appointment[] })[];

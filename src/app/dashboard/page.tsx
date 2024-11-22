@@ -3,7 +3,7 @@ import ServicesCard from "./ServicesCard";
 import AppointmentsCard from "./AppointmentsCard";
 import ClientsCard from "./ClientsCard";
 import ReportsCard from "./ReportsCard";
-import { ObtenerCitasExtendido, ObtenerServicios, ObtenerUsuarioConCitasTotales, ObtenerUsuarios } from "../actions";
+import { getServiceNames, ObtenerCitasExtendido, ObtenerServicios, ObtenerUsuarioConCitasTotales, ObtenerUsuarios } from "../actions";
 
 export default async function Page() {
   const services = await ObtenerServicios();
@@ -12,11 +12,8 @@ export default async function Page() {
 
   const clients = await ObtenerUsuarioConCitasTotales();
 
-  const statsData = [
-    { id: "s1", service: "Corte de pelo", appointments: 45 },
-    { id: "s2", service: "Manicura", appointments: 30 },
-    { id: "s3", service: "Facial", appointments: 25 },
-  ];
+  const serviceIds = [...new Set(appointments.map((appointment) => appointment.serviceId))];
+  const serviceNames = await getServiceNames(serviceIds);
 
   return (
     <>
@@ -33,7 +30,7 @@ export default async function Page() {
       </TabsContent>
 
       <TabsContent value="reports">
-        <ReportsCard statsData={statsData} />
+        <ReportsCard appointments={appointments} serviceNames={serviceNames} />
       </TabsContent>
     </>
   );

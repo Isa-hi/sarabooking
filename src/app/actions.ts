@@ -85,3 +85,23 @@ export async function IniciarSesion(email: string, password: string) {
 export async function CrearUsuario(data: Omit<User, "id" | "createdAt" | "updatedAt">) {
   return await prisma.user.create({ data });
 }
+
+// Tools
+export async function getServiceNames(serviceIds: string[]) {
+  const services = await prisma.service.findMany({
+    where: {
+      id: {
+        in: serviceIds
+      }
+    },
+    select: {
+      id: true,
+      name: true
+    }
+  })
+
+  return services.reduce((acc, service) => {
+    acc[service.id] = service.name
+    return acc
+  }, {} as Record<string, string>)
+}
