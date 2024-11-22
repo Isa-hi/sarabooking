@@ -55,6 +55,12 @@ export async function ObtenerHorariosDisponibles({ serviceId, date }: { serviceI
   
 }
 
+export async function EditarCita(id: string, data: Partial<Appointment>) {
+  return await prisma.appointment.update({
+    where: { id },
+    data,
+  });
+}
 // User Actions
 export async function ObtenerUsuarios() {
   return await prisma.user.findMany({});

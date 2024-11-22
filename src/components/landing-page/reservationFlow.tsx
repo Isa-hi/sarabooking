@@ -30,8 +30,7 @@ export default function ReservationFlow({
 
   // FormData
   const [motivo, setMotivo] = useState("");
-  const [nombre, setNombre] = useState("");
-  const [telefono, setTelefono] = useState("");
+
 
   const user = localStorage.getItem("user")!;
   const userObject = JSON.parse(user);

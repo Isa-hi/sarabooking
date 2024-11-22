@@ -18,6 +18,16 @@ import {
 } from "@/components/ui/select";
 import { Appointment, Service, User } from "@prisma/client";
 import { useState } from "react";
+import { Edit, Trash } from "lucide-react";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { EditarCita } from "../actions";
 
 type AppointmentsCardProps = {
   services: Service[];
@@ -36,6 +46,10 @@ export default function AppointmentsCard({
 
   const [filteredAppointments, setFilteredAppointments] =
     useState(appointments);
+
+  const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
+  const [currentAppointment, setCurrentAppointment] =
+    useState<Appointment | null>(null);
 
   const handleDateFilter = () => {
     if (selectedDate) {
@@ -81,6 +95,26 @@ export default function AppointmentsCard({
   };
   const handleSelectService = (value: string) => {
     setSelectedService(value);
+  };
+
+  const handleEditAppointment = (appointment: Appointment) => {
+    setCurrentAppointment(appointment);
+    setIsEditDialogOpen(true);
+  };
+
+  const handleSaveAppointment = () => {
+    EditarCita(currentAppointment!.id, {
+      motivo: currentAppointment!.motivo,
+    }).then(() => {
+      setIsEditDialogOpen(false);
+      window.location.reload();
+    });
+  };
+
+  const handleChangeAppointmentStatus = (id: string, status: string) => {
+    EditarCita(id, { status }).then(() => {
+      window.location.reload();
+    });
   };
 
   return (
@@ -159,7 +193,7 @@ export default function AppointmentsCard({
                     </p>
                     <p>Motivo: {appointment.motivo}</p>
                   </div>
-                  <div>
+                  <div className="flex items-center space-x-2">
                     <span
                       className={`px-2 py-1 rounded text-sm ${
                         appointment.status === "Confirmado"
@@ -173,6 +207,52 @@ export default function AppointmentsCard({
                     >
                       {appointment.status}
                     </span>
+                    <Dialog>
+                      <DialogTrigger asChild>
+                        <Button
+                          variant="outline"
+                          size="icon"
+                          onClick={() => handleEditAppointment(appointment)}
+                        >
+                          <Edit className="w-4 h-4" />
+                        </Button>
+                      </DialogTrigger>
+                      <DialogContent>
+                        <DialogHeader>
+                          <DialogTitle>Editar Cita</DialogTitle>
+                        </DialogHeader>
+                        <div className="space-y-4">
+                          <Label>Notas</Label>
+                          <Input
+                            value={currentAppointment?.motivo || ""}
+                            onChange={(e) =>
+                              setCurrentAppointment({
+                                ...currentAppointment!,
+                                motivo: e.target.value,
+                              })
+                            }
+                          />
+                          <Button onClick={handleSaveAppointment}>
+                            Guardar
+                          </Button>
+                        </div>
+                      </DialogContent>
+                    </Dialog>
+                    <Select
+                      onValueChange={(value) =>
+                        handleChangeAppointmentStatus(appointment.id, value)
+                      }
+                    >
+                      <SelectTrigger>
+                        <SelectValue placeholder="Cambiar estado" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="Confirmado">Confirmado</SelectItem>
+                        <SelectItem value="Pendiente">Pendiente</SelectItem>
+                        <SelectItem value="Completado">Completado</SelectItem>
+                        <SelectItem value="Cancelado">Cancelado</SelectItem>
+                      </SelectContent>
+                    </Select>
                   </div>
                 </div>
               ))}
